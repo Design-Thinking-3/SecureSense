@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import OpenAI from "openai";
 import { ANALYSE_PROMPT, ANALYSIS_SCHEMA, ASK_PROMPT, ASK_SCHEMA } from "./prompts.js";
-import { buildFacts, evidenceCorpus, formatEmailForModel } from "./emailSignals.js";
+import { buildFacts, evidenceCorpus, formatEmailForModel } from "./emails.js";
 import { clip, normalizeAnalysis, normalizeAnswer } from "./normalize.js";
 
 
