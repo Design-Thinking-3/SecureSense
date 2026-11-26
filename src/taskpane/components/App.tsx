@@ -147,8 +147,19 @@ const useStyles = makeStyles({
   },
   adviceHeading: { color: tokens.colorBrandForeground1 },
   adviceText: { color: tokens.colorNeutralForeground1, lineHeight: "20px" },
-  analyseButton: { marginTop: "auto" },
-  readyAnalyseButton: { width: "100%" },
+  actionFooter: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    marginTop: "auto",
+  },
+  analyseButton: { width: "100%" },
+  chatAgentButton: {
+    width: "100%",
+    color: tokens.colorBrandForeground1,
+    backgroundColor: "#EAF2FC",
+    border: "1px solid #CEDFF2",
+  },
   loadingState: {
     position: "absolute",
     inset: 0,
@@ -380,18 +391,26 @@ const App: React.FC = () => {
               </>
             )}
 
-            <Button appearance="subtle" onClick={() => setShowAgent(!showAgent)}>
-              {showAgent ? "Hide chat agent" : "Open chat agent"}
-            </Button>
+            <div className={styles.actionFooter}>
+              {!result && (
+                <Button
+                  className={styles.analyseButton}
+                  appearance="primary"
+                  size={isReady ? "large" : "medium"}
+                  onClick={analyse}
+                >
+                  Analyse this email
+                </Button>
+              )}
 
-            <Button
-              className={`${styles.analyseButton} ${isReady ? styles.readyAnalyseButton : ""}`}
-              appearance="primary"
-              size={isReady ? "large" : "medium"}
-              onClick={analyse}
-            >
-              Analyse this email
-            </Button>
+              <Button
+                className={styles.chatAgentButton}
+                appearance="secondary"
+                onClick={() => setShowAgent(!showAgent)}
+              >
+                {showAgent ? "Hide chat agent" : "Open chat agent"}
+              </Button>
+            </div>
           </>
         )}
       </div>
