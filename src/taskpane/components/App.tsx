@@ -7,16 +7,20 @@ import {
   Warning24Regular,
 } from "@fluentui/react-icons";
 import { readCurrentEmail } from "../emailReader";
+import type { Analysis } from "../types";
 
-const agentUrl =
-  "https://copilotstudio.microsoft.com/environments/Default-2eba4cf8-af76-4db3-bcaf-81b5592535ef/bots/cr4d5_agent_c2bVLX/webchat?__version__=2&enableFileAttachment=false&cliAgent=true";
+const riskColour = { high: "danger", medium: "warning", low: "success" } as const;
 
-interface Analysis {
-  verdict: "safe" | "suspicious" | "malicious";
-  confidence: number;
-  reasons: string[];
-  advice: string;
-}
+const liveChatScriptUrl = "https://oc-cdn-public-oce.azureedge.net/livechatwidget/scripts/LiveChatBootstrapper.js";
+const liveChatFallbackUrl =
+  "https://ocprodpublicocegs.blob.core.windows.net/livechatwidget/scripts/LiveChatBootstrapper.js";
+const liveChatAttributes = {
+  "data-app-id": "31b45f16-22f2-4396-8570-06584a86c764",
+  "data-lcw-version": "prod",
+  "data-org-id": "03336418-251b-4f0d-acf9-98604e8fad08",
+  "data-org-url": "https://m-03336418-251b-4f0d-acf9-98604e8fad08.au.omnichannelengagementhub.com",
+  "data-widget-ui-version": "modern",
+};
 
 const riskDescription: Record<Analysis["verdict"], string> = {
   safe: "No significant signs of phishing were detected.",
@@ -176,15 +180,13 @@ const useStyles = makeStyles({
   loadingMessage: { color: tokens.colorNeutralForeground1 },
   loadingDescription: { color: tokens.colorNeutralForeground2 },
   error: { color: tokens.colorPaletteRedForeground1 },
-  agent: { flex: 1, width: "100%", border: 0, minHeight: "300px" },
 });
-
-const verdictColour = { safe: "success", suspicious: "warning", malicious: "danger" } as const;
 
 const App: React.FC = () => {
   const styles = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [chatError, setChatError] = React.useState("");
   const [result, setResult] = React.useState<Analysis | null>(null);
   const [showAgent, setShowAgent] = React.useState(false);
   const isReady = !loading && !error && !result;
@@ -219,7 +221,7 @@ const App: React.FC = () => {
       const res = await fetch("/api/analyse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(email),
+        body: JSON.stringify({ email }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `Server error ${res.status}`);
