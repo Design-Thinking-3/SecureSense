@@ -3,24 +3,65 @@ import { Button, Spinner, Badge, Text, makeStyles, tokens } from "@fluentui/reac
 import { readCurrentEmail } from "../emailReader";
 import type { Analysis } from "../types";
 
-const agentUrl =
-  "https://copilotstudio.microsoft.com/environments/Default-2eba4cf8-af76-4db3-bcaf-81b5592535ef/bots/cr4d5_agent_c2bVLX/webchat?__version__=2&enableFileAttachment=false&cliAgent=true";
-
 const riskColour = { high: "danger", medium: "warning", low: "success" } as const;
+
+const liveChatScriptUrl = "https://oc-cdn-public-oce.azureedge.net/livechatwidget/scripts/LiveChatBootstrapper.js";
+const liveChatFallbackUrl =
+  "https://ocprodpublicocegs.blob.core.windows.net/livechatwidget/scripts/LiveChatBootstrapper.js";
+const liveChatAttributes = {
+  "data-app-id": "31b45f16-22f2-4396-8570-06584a86c764",
+  "data-lcw-version": "prod",
+  "data-org-id": "03336418-251b-4f0d-acf9-98604e8fad08",
+  "data-org-url": "https://m-03336418-251b-4f0d-acf9-98604e8fad08.au.omnichannelengagementhub.com",
+  "data-widget-ui-version": "modern",
+};
 
 const useStyles = makeStyles({
   root: { display: "flex", flexDirection: "column", height: "100vh" },
   panel: { padding: "12px", display: "flex", flexDirection: "column", gap: "10px" },
   error: { color: tokens.colorPaletteRedForeground1 },
-  agent: { flex: 1, width: "100%", border: 0, minHeight: "300px" },
 });
 
 const App: React.FC = () => {
   const styles = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [chatError, setChatError] = React.useState("");
   const [result, setResult] = React.useState<Analysis | null>(null);
-  const [showAgent, setShowAgent] = React.useState(false);
+
+  React.useEffect(() => {
+    let disposed = false;
+    let activeScript: HTMLScriptElement;
+
+    const createScript = (src: string, isFallback: boolean): HTMLScriptElement => {
+      const script = document.createElement("script");
+      script.id = "Microsoft_Omnichannel_LCWidget";
+      script.src = src;
+      script.async = true;
+      Object.keys(liveChatAttributes).forEach((name) =>
+        script.setAttribute(name, liveChatAttributes[name as keyof typeof liveChatAttributes])
+      );
+      script.onerror = () => {
+        script.remove();
+        if (disposed) return;
+        if (isFallback) {
+          setChatError("Chat support couldn't be loaded. Please try again later.");
+          return;
+        }
+        activeScript = createScript(liveChatFallbackUrl, true);
+        document.body.appendChild(activeScript);
+      };
+      return script;
+    };
+
+    activeScript = createScript(liveChatScriptUrl, false);
+    document.body.appendChild(activeScript);
+
+    return () => {
+      disposed = true;
+      activeScript.remove();
+    };
+  }, []);
 
   const analyse = async () => {
     setLoading(true);
@@ -52,6 +93,7 @@ const App: React.FC = () => {
 
         {loading && <Spinner label="Analysing..." />}
         {error && <Text className={styles.error}>{error}</Text>}
+        {chatError && <Text className={styles.error} role="alert">{chatError}</Text>}
 
         {result && (
           <>
@@ -74,13 +116,7 @@ const App: React.FC = () => {
             {result.recommendation && <Text weight="semibold">My recommendation: {result.recommendation}</Text>}
           </>
         )}
-
-        <Button appearance="subtle" onClick={() => setShowAgent(!showAgent)}>
-          {showAgent ? "Hide chat agent" : "Open chat agent"}
-        </Button>
       </div>
-
-      {showAgent && <iframe className={styles.agent} src={agentUrl} title="SecureSense AI agent" />}
     </div>
   );
 };
