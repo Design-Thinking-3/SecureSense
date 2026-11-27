@@ -28,7 +28,9 @@
     "accentColor": "#230201",
     "validDomains": [
         "contoso.com",
-        "copilotstudio.microsoft.com"
+        "oc-cdn-public-oce.azureedge.net",
+        "ocprodpublicocegs.blob.core.windows.net",
+        "m-03336418-251b-4f0d-acf9-98604e8fad08.au.omnichannelengagementhub.com"
     ],
     "authorization": {
         "permissions": {
