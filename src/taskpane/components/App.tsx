@@ -50,6 +50,7 @@ const useStyles = makeStyles({
     backgroundColor: tokens.colorNeutralBackground1,
   },
   brandRow: { display: "flex", alignItems: "center", gap: "10px" },
+  welcomeCopy: { display: "flex", flexDirection: "column", gap: "4px" },
   brandMark: {
     display: "grid",
     placeItems: "center",
@@ -236,7 +237,7 @@ const App: React.FC = () => {
                   </Text>
                 </div>
 
-                <div>
+                <div className={styles.welcomeCopy}>
                   <Text className={styles.eyebrow} size={200} weight="semibold">
                     EMAIL SECURITY
                   </Text>

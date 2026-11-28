@@ -15,11 +15,11 @@
     },
     "name": {
         "short": "SecureSense",
-        "full": "Contoso Task Pane Add-in"
+        "full": "SecureSense Email Analyser"
     },
     "description": {
-        "short": "A template to get started.",
-        "full": "This is the template to get started."
+        "short": "Checks emails for phishing and other malicious content.",
+        "full": "SecureSense analyses the open email for phishing and scams using AI."
     },
     "icons": {
         "outline": "assets/outline.png",
@@ -34,7 +34,7 @@
         "permissions": {
             "resourceSpecific": [
                 {
-                    "name": "Mailbox.ReadWrite.User",
+                    "name": "MailboxItem.Read.User",
                     "type": "Delegated"
                 }
             ]
@@ -46,7 +46,7 @@
                 "capabilities": [
                     {
                         "name": "Mailbox",
-                        "minVersion": "1.3"
+                        "minVersion": "1.8"
                     }
                 ],
                 "scopes": [
@@ -59,7 +59,7 @@
                         "capabilities": [
                             {
                                 "name": "Mailbox",
-                                "minVersion": "1.3"
+                                "minVersion": "1.8"
                             }
                         ]
                     },
@@ -77,27 +77,11 @@
                             "view": "dashboard"
                         }
                     ]
-                },
-                {
-                    "id": "CommandsRuntime",
-                    "type": "general",
-                    "code": {
-                        "page": "https://www.contoso.com/commands.html",
-                        "script": "https://www.contoso.com/commands.js"
-                    },
-                    "lifetime": "short",
-                    "actions": [
-                        {
-                            "id": "action",
-                            "type": "executeFunction"
-                        }
-                    ]
                 }
             ],
             "ribbons": [
                 {
                     "contexts": [
-                        "mailCompose",
                         "mailRead"
                     ],
                     "tabs": [
@@ -106,7 +90,7 @@
                             "groups": [
                                 {
                                     "id": "msgComposeGroup",
-                                    "label": "Contoso Add-in",
+                                    "label": "SecureSense",
                                     "icons": [
                                         {
                                             "size": 16,
@@ -125,7 +109,7 @@
                                         {
                                             "id": "msgComposeOpenPaneButton",
                                             "type": "button",
-                                            "label": "Show Task Pane",
+                                            "label": "Analyse email",
                                             "icons": [
                                                 {
                                                     "size": 16,
@@ -145,30 +129,6 @@
                                                 "description": "Opens a task pane."
                                             },
                                             "actionId": "TaskPaneRuntimeShow"
-                                        },
-                                        {
-                                            "id": "ActionButton",
-                                            "type": "button",
-                                            "label": "Perform an action",
-                                            "icons": [
-                                                {
-                                                    "size": 16,
-                                                    "url": "https://www.contoso.com/assets/icon-16.png"
-                                                },
-                                                {
-                                                    "size": 32,
-                                                    "url": "https://www.contoso.com/assets/icon-32.png"
-                                                },
-                                                {
-                                                    "size": 80,
-                                                    "url": "https://www.contoso.com/assets/icon-80.png"
-                                                }
-                                            ],
-                                            "supertip": {
-                                                "title": "Perform an action",
-                                                "description": "Perform an action when clicked."
-                                            },
-                                            "actionId": "action"
                                         }
                                     ]
                                 }
