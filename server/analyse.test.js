@@ -16,12 +16,12 @@ test("Removes duplicate links", () => {
 test("Returns an empty list when there are no links", () => {
   assert.deepEqual(extractLinks("Lunch at 12?"), []);
 });
-
+// The AI sometimes adds extra text around the JSON, so we need to be able to parse it out
 test("Parses JSON even when the AI adds extra text around it", () => {
   const reply = 'Sure! {"verdict":"safe","confidence":90,"reasons":[],"advice":"ok"} Hope that helps';
   assert.equal(parseAnalysis(reply).verdict, "safe");
 });
-
+// If the AI gives no JSON at all, fail with an error instead of guessing
 test("Throws an error when the AI reply has no JSON", () => {
   assert.throws(() => parseAnalysis("Sorry I am unable to help you with that."));
 });
