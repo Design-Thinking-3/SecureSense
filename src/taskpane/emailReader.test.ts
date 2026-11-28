@@ -29,7 +29,7 @@ describe("readCurrentEmail", () => {
     setupOffice(makeItem());
     const email = await readCurrentEmail();
 
-    expect(email.from).toBe("Ryan <ryan@example.com>");
+    expect(email.from).toEqual({name: "Ryan", address: "ryan@example.com"});
     expect(email.subject).toBe("Hello");
     expect(email.body).toBe("Body text");
     expect(email.headers).toBe("Received: from mail.example.com");
@@ -45,7 +45,7 @@ describe("readCurrentEmail", () => {
   test("Returns an empty sender if 'from' is missing", async () => {
     setupOffice(makeItem({ from: undefined }));
     const email = await readCurrentEmail();
-    expect(email.from).toBe("");
+    expect(email.from).toEqual({"name": "", "address": ""});
   });
  // No attatchment on the email, so returns an empty list
   test("Returns an empty list when there are no attachments", async () => {
