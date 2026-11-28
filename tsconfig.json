@@ -13,7 +13,7 @@
     "rootDir": "./src",
     "sourceMap": true,
     "target": "es6",
-    "types": ["jest", "office-js"],
+    "types": ["jest", "office-js", "node"],
     "lib": [
       "es7",
       "dom"
